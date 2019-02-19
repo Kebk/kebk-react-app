@@ -1,24 +1,19 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const merge = require('webpack-merge')
+const base = require('./webpack.base.config')
+const webpack = require('webpack')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-module.exports = {
+const devConfig = {
   mode: 'development',
-  entry: {
-    index: ['./src/index.js']
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    hot: true,
+    open: true
   },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: path.resolve(__dirname, './node_modules'),
-        include: path.resolve(__dirname, './src')
-      },
       {
         test: /\.css$/,
         use: [
@@ -39,11 +34,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html'
-    })
-  ],
-  optimization: {
-    minimizer: [new OptimizeCssAssetsPlugin({})]
-  }
+    new BundleAnalyzerPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+  ]
 }
+
+module.exports = merge(base, devConfig)
