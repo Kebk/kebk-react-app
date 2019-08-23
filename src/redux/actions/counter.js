@@ -1,6 +1,6 @@
-export const INCREMENT = 'count-increment'
-export const DECREMENT = 'count-decrement'
-export const RESET = 'count-reset'
+export const INCREMENT = 'count_increment'
+export const DECREMENT = 'count_decrement'
+export const RESET = 'count_reset'
 
 export function increment() {
   return {

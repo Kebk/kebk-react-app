@@ -1,39 +1,39 @@
 import React, { Component } from 'react'
-import store from '@/redux/store'
 import { increment, decrement, reset } from '@/redux/actions/counter'
+import { connect } from 'react-redux'
 
 class Counter extends Component {
-  constructor(props) {
-    super(props)
-    this.state = store.getState().counter
-    store.subscribe(this.handleStoreChange)
-  }
   render() {
     return (
       <div>
-        <div>当前计数(来自redux):{this.state.count}</div>
-        <button onClick={this.handleIncrement}>自增</button>
-        <button onClick={this.handleDecrement}>自减</button>
-        <button onClick={this.handleReset}>重置</button>
+        <div>当前计数(来自redux):{this.props.counter.count}</div>
+        <button onClick={() => this.props.increment()}>自增</button>
+        <button onClick={() => this.props.decrement()}>自减</button>
+        <button onClick={() => this.props.reset()}>重置</button>
       </div>
     )
   }
+}
 
-  handleIncrement() {
-    store.dispatch(increment())
-  }
+const mapStateToProps = state => {
+  return { counter: state.counter }
+}
 
-  handleDecrement() {
-    store.dispatch(decrement())
-  }
-
-  handleReset() {
-    store.dispatch(reset())
-  }
-
-  handleStoreChange = () => {
-    this.setState(store.getState().counter)
+const mapDispatchToProps = dispatch => {
+  return {
+    increment: () => {
+      dispatch(increment())
+    },
+    decrement: () => {
+      dispatch(decrement())
+    },
+    reset: () => {
+      dispatch(reset())
+    }
   }
 }
 
-export default Counter
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter)

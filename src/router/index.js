@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 import Home from '@/pages/Home/Home'
 import Page1 from '@/pages/Page1/Page1'
 import Counter from '@/pages/Counter/Counter'
+import UserInfo from '@/pages/User/UserInfo'
 
 const getRouter = () => (
   <BrowserRouter>
@@ -18,11 +19,15 @@ const getRouter = () => (
         <li>
           <Link to="/counter">counter</Link>
         </li>
+        <li>
+          <Link to="/userInfo">UserInfo</Link>
+        </li>
       </ul>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/page1" component={Page1} />
         <Route exact path="/counter" component={Counter} />
+        <Route exact path="/userInfo" component={UserInfo} />
       </Switch>
     </div>
   </BrowserRouter>
