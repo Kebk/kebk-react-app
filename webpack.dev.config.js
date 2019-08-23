@@ -1,10 +1,16 @@
 const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: ['react-hot-loader/patch', path.join(__dirname, 'src/index.js')],
+  entry: {
+    app: ['react-hot-loader/patch', path.join(__dirname, 'src/index.js')],
+    vendor: ['react', 'react-router-dom', 'redux', 'react-dom', 'react-redux']
+  },
   output: {
     path: path.join(__dirname, './dist'),
-    filename: 'bundle.js'
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[chunkhash].js'
   },
   module: {
     rules: [
@@ -30,6 +36,15 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.join(__dirname, 'static/index.html')
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
+    })
+  ],
   devServer: {
     port: 9700,
     contentBase: path.join(__dirname, './dist'),

@@ -2,6 +2,15 @@
 
 [从零搭建`React全家桶`框架教程](https://github.com/brickspert/blog/issues/1)
 
+## dev enviroment
+
+```shell
+node -v
+# v10.7.0
+npm -v
+# 6.1.0
+```
+
 ## stack
 
 `webpack` `react`
