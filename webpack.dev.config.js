@@ -24,5 +24,6 @@ module.exports = {
     alias: {
       '@': path.join(__dirname, 'src')
     }
-  }
+  },
+  devtool: 'inline-source-map'
 }
