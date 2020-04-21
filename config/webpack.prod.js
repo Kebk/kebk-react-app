@@ -1,4 +1,5 @@
 const merge = require('webpack-merge')
+const cssnano = require('cssnano')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
 
@@ -6,20 +7,10 @@ const baseConfig = require('./webpack.base')
 
 const prodConfig = {
   mode: 'production',
-  rules: [
-    {
-      test: /\.css$/,
-      use: ['ignore-loader']
-    },
-    {
-      test: /\.less$/,
-      use: ['ignore-loader']
-    }
-  ],
   plugins: [
     new OptimizeCssAssetsPlugin({
       assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano')
+      cssProcessor: cssnano
     }),
     new HtmlWebpackExternalsPlugin({
       externals: [
@@ -30,8 +21,7 @@ const prodConfig = {
         },
         {
           module: 'react-dom',
-          entry:
-            'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
+          entry: 'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
           global: 'ReactDom'
         }
       ]

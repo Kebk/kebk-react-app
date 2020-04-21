@@ -3,14 +3,17 @@ const glob = require('glob')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const friendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+
+const projectRoot = process.cwd()
 
 // 多页应用定义与页面模板
 const setMap = () => {
   const entry = {}
   const htmlWebpackPlugins = []
 
-  const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'))
+  const entryFiles = glob.sync(path.join(projectRoot, './src/*/index.js'))
 
   Object.keys(entryFiles).map((index) => {
     const entryFile = entryFiles[index]
@@ -19,9 +22,9 @@ const setMap = () => {
     const pageName = match && match[1]
 
     entry[pageName] = entryFile
-    htmlWebpackPlugins.push(
+    return htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, `src/${pageName}/index.html`),
+        template: path.join(projectRoot, `src/${pageName}/index.html`),
         filename: `${pageName}.html`,
         chunks: ['vendors', pageName],
         inject: true,
@@ -47,6 +50,10 @@ const { entry, htmlWebpackPlugins } = setMap()
 
 module.exports = {
   entry,
+  output: {
+    path: path.join(projectRoot, 'dist'),
+    filename: '[name]_[chunkhash:8].js'
+  },
   module: {
     rules: [
       {
@@ -67,7 +74,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               plugins: () => [
-                require('autoprefixer')({
+                autoprefixer({
                   overrideBrowserslist: ['last 2 version', '>1%', 'IOS 7']
                 })
               ]
@@ -111,14 +118,15 @@ module.exports = {
       filename: '[name]_[contenthash:8].css'
     }),
     new CleanWebpackPlugin(),
-    new friendlyErrorsWebpackPlugin(),
-    function () {
+    new FriendlyErrorsWebpackPlugin(),
+    function errorPlugin() {
       this.hooks.done.tap('done', (stats) => {
         if (
-          stats.compilation.errors &&
-          stats.compilation.errors.length &&
-          process.argv.indexOf('--watch') === -1
+          stats.compilation.errors
+          && stats.compilation.errors.length
+          && process.argv.indexOf('--watch') === -1
         ) {
+          // eslint-disable-next-line no-console
           console.log('build error')
           process.exit(1)
         }
